@@ -6,7 +6,7 @@
 #include "Components/AudioComponent.h"
 #include "GameModes/MainGameInstance.h"
 #include "GameModes/Entry/EntryPlayerState.h"
-#include "Home/Public/EntryUserWidget.h"
+#include "GameModes/Entry/EntryHomeWidget.h"
 #include "MainSoundPlugin/Public/MainSoundWidget.h"
 #include "ChatPlugin/Public/ChatWidget.h"
 
@@ -41,7 +41,7 @@ void AEntryPlayerController::BeginPlay()
 		return;
 	}
 
-	EntryWidget = CreateWidget<UEntryUserWidget>(GetWorld(), EntryWidgetClass);
+	EntryWidget = CreateWidget<UEntryHomeWidget>(GetWorld(), EntryWidgetClass);
 	EntryWidget->AddToViewport();
 
 	Player0->SetInputMode(FInputModeUIOnly());

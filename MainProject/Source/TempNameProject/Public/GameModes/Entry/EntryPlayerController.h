@@ -13,7 +13,7 @@ class USoundClass;
 class UAudioComponent;
 class UUserWidget;
 class UChatWidget;
-class UEntryUserWidget;
+class UEntryHomeWidget;
 
 /**
  * 
@@ -153,10 +153,10 @@ public:
 
 	//======================================================
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "UI")
-	TSubclassOf<UEntryUserWidget> EntryWidgetClass;
+	TSubclassOf<UEntryHomeWidget> EntryWidgetClass;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "UI")
-	TObjectPtr<UEntryUserWidget> EntryWidget;
+	TObjectPtr<UEntryHomeWidget> EntryWidget;
 
 	FTimerHandle th_RequestUserName;
 
