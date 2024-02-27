@@ -8,9 +8,12 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Controller.h"
+#include "GameFramework/Actor.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Engine/SkeletalMesh.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -55,6 +58,24 @@ AASJ_CharactersASFix::AASJ_CharactersASFix()
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
 
+void AASJ_CharactersASFix::ClientInkShoot_Implementation()
+{
+	ServerInkShoot();
+}
+
+void AASJ_CharactersASFix::ServerInkShoot_Implementation()
+{
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+	FTransform FT = UKismetMathLibrary::MakeTransform(
+		InkWeaponComponent->GetSocketLocation("Muzzle"),
+		GetController()->GetControlRotation());
+
+	InkAmmo = GetWorld()->SpawnActor<AActor>(*InkAmmoClass, InkWeaponComponent->GetSocketLocation("Muzzle"), GetController()->GetControlRotation());
+
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("ServerInkShoot !!"));
+}
+
 void AASJ_CharactersASFix::BeginPlay()
 {
 	// Call the base class  
@@ -68,6 +89,9 @@ void AASJ_CharactersASFix::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+
+	MarkerSpawn();
+	
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -87,6 +111,10 @@ void AASJ_CharactersASFix::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AASJ_CharactersASFix::Look);
+
+		// Shoot
+		EnhancedInputComponent->BindAction(InkShootAction, ETriggerEvent::Started, this, &AASJ_CharactersASFix::InkShoot);
+		EnhancedInputComponent->BindAction(InkShootAction, ETriggerEvent::Completed, this, &AASJ_CharactersASFix::InkShoot);
 	}
 	else
 	{
@@ -127,5 +155,55 @@ void AASJ_CharactersASFix::Look(const FInputActionValue& Value)
 		// add yaw and pitch input to controller
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
+	}
+}
+
+void AASJ_CharactersASFix::InkShoot(const FInputActionValue& Value)
+{
+	ClientInkShoot();
+}
+
+//void AASJ_CharactersASFix::MarkerSpawn()
+//{
+//	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("attach !!"));
+//	
+//	// 무기 "Actor" 추가
+//	//InkWeapon = GetWorld()->SpawnActor<AActor>(AActor::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator);
+//
+//	// 무기 "스켈레탈 매시 컴포넌트" 추가 및 "스켈레탈 메시" 지정
+//	FTransform FT = UKismetMathLibrary::MakeTransform(FVector(0, 0, 0), FRotator(0, 0, 0), FVector(1, 1, 1));
+//	//InkWeapon->AddComponent(FName("Weapon"), true, FT, false);
+//
+//	UActorComponent* WeaponComponent = AddComponent(TEXT("WeaponComponent"), true, FT, USkeletalMeshComponent::StaticClass());
+//	//InkWeaponSKMeshComp->SetSkeletalMesh(WeaponComponent);
+//
+//	// 무기 컴포넌트를 최상위 
+//	//InkWeaponSKMeshComp->AttachToComponent(this->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+//
+//	// 캐릭터 매시의 특정 소켓에 부착
+//	InkWeaponScene = Cast<USkeletalMeshComponent>(WeaponComponent);
+//	InkWeaponScene->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("WeaponSocket"));
+//
+//	//InkWeaponSKMeshComp->RegisterComponent();
+//}
+
+
+void AASJ_CharactersASFix::MarkerSpawn()
+{
+	// 스켈레탈 메시 컴포넌트를 생성하고 초기화
+	InkWeaponComponent = NewObject<USkeletalMeshComponent>(this, *InkWeaponComponentClass);
+	if (InkWeaponComponent)
+	{
+		InkWeaponComponent->RegisterComponent();	// 실제 생성
+
+		// 스켈레탈 메시 설정
+		// InkWeaponComponent->SetSkeletalMesh(InkWeaponMesh);
+
+		// 특정 소켓에 부착
+		InkWeaponComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("WeaponSocket"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Failed to create InkWeaponScene"));
 	}
 }

@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
+using UnrealBuildTool.Rules;
 
 public class TempNameProject : ModuleRules
 {
@@ -8,7 +9,7 @@ public class TempNameProject : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "MainSoundPlugin", "HomeLevelGameModePlugin", "UMG", "EnhancedInput", "IntroPlugin", "WASDEnhancedInput", "Sockets", "Networking", "OnlineSubsystem", "OnlineSubsystemUtils", "ChatPlugin", "Home" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "MainSoundPlugin", "HomeLevelGameModePlugin", "UMG", "EnhancedInput", "IntroPlugin", "WASDEnhancedInput", "Sockets", "Networking", "OnlineSubsystem", "OnlineSubsystemUtils", "ChatPlugin", "Home", "MediaAssets" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

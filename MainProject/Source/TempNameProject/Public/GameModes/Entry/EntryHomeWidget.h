@@ -6,6 +6,9 @@
 #include "Blueprint/UserWidget.h"
 #include "EntryHomeWidget.generated.h"
 
+class UMediaSource;
+class UMediaPlayer;
+
 /**
  * 
  */
@@ -28,5 +31,11 @@ private:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
-	UUserWidget* EntrySoundWidget;
+	TObjectPtr<UUserWidget> EntrySoundWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UMediaPlayer> HomeLevelBackgroundPlayer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UMediaSource> HomeLevelBackgroundSource;
 };

@@ -2,9 +2,18 @@
 
 
 #include "GameModes/Entry/EntryHomeWidget.h"
+#include "MediaPlayer.h"
 
 void UEntryHomeWidget::NativeConstruct()
 {
+	Super::NativeConstruct();
+	
+	if (!HomeLevelBackgroundPlayer || !HomeLevelBackgroundSource)
+	{
+		return;
+	}
+	HomeLevelBackgroundPlayer->OpenSource(HomeLevelBackgroundSource);
+
 }
 
 UUserWidget* UEntryHomeWidget::GetEntrySoundWidget()
