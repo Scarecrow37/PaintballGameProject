@@ -12,8 +12,10 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "Engine/SkeletalMesh.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
+
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -113,8 +115,7 @@ void AASJ_CharactersASFix::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AASJ_CharactersASFix::Look);
 
 		// Shoot
-		EnhancedInputComponent->BindAction(InkShootAction, ETriggerEvent::Started, this, &AASJ_CharactersASFix::InkShoot);
-		EnhancedInputComponent->BindAction(InkShootAction, ETriggerEvent::Completed, this, &AASJ_CharactersASFix::InkShoot);
+		EnhancedInputComponent->BindAction(InkShootAction, ETriggerEvent::Triggered, this, &AASJ_CharactersASFix::InkShoot);
 	}
 	else
 	{

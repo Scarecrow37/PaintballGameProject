@@ -73,6 +73,7 @@ protected:
 	/** Called for Shoot input */
 	void InkShoot(const FInputActionValue& Value);
 
+	/** Attach Marker */
 	void MarkerSpawn();
 
 public:
@@ -89,7 +90,6 @@ public:
 	TObjectPtr<AActor> InkAmmo;
 
 protected:
-
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
